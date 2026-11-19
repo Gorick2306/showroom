@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRONA МЕБЕЛЬ — Каталог товаров</title>
+    <style>
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #0e1116; color: #f3f4f6; line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background-color: rgba(14, 17, 22, 0.92); backdrop-filter: blur(10px); padding: 14px 6%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f242d; position: sticky; top: 0; z-index: 100; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 900; letter-spacing: 2px; text-decoration: none; color: #ffffff; }
+        .brand-dot { width: 10px; height: 10px; background-color: #10b981; border-radius: 50%; }
+        nav a { text-decoration: none; color: #9ca3af; margin: 0 14px; font-size: 15px; font-weight: 600; transition: 0.2s; }
+        nav a:hover, nav a.active { color: #10b981; }
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .soc-btn { background-color: #181c24; color: #f3f4f6; border: 1px solid #2a303c; width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.2s; }
+        .soc-btn:hover { border-color: #10b981; color: #10b981; }
+        .soc-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        .fav-btn { background-color: #181c24; color: #f3f4f6; border: 1px solid #2a303c; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+        .fav-count { background-color: #10b981; color: #0e1116; padding: 1px 6px; border-radius: 10px; font-size: 12px; font-weight: 800; }
+        .burger-btn { background-color: #10b981; color: #0e1116; border: none; width: 38px; height: 38px; border-radius: 10px; font-size: 19px; font-weight: bold; cursor: pointer; }
+
+        /* Высокий и светлый баннер шоурума в шапке каталога */
+        .page-top {
+            background: linear-gradient(180deg, rgba(14, 17, 22, 0.18) 0%, rgba(14, 17, 22, 0.12) 60%, rgba(14, 17, 22, 0.94) 100%), url('showroom-bg.jpg') center/cover no-repeat;
+            min-height: 55vh;
+            display: flex;
+            align-items: center;
+            padding: 90px 6% 70px 6%;
+            margin-bottom: 35px;
+            border-bottom: 1px solid #1f242d;
+            width: 100%;
+        }
+        .page-top-inner { max-width: 1140px; margin: 0 auto; width: 100%; }
+        .page-top h1 { margin: 0 0 12px 0; font-size: 42px; text-shadow: 0 3px 18px rgba(0,0,0,0.85); }
+        .page-top p { margin: 0; color: #ffffff; font-size: 17px; max-width: 620px; text-shadow: 0 2px 14px rgba(0,0,0,0.9); font-weight: 500; }
+
+        .controls { max-width: 1140px; margin: 0 auto 35px auto; padding: 0 6%; width: 100%; }
+        .search-box { width: 100%; padding: 15px 20px; border-radius: 14px; border: 1px solid #2a303c; background-color: #151921; color: #ffffff; font-size: 16px; margin-bottom: 18px; outline: none; }
+        .search-box:focus { border-color: #10b981; }
+        .filter-tabs { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tab-btn { background-color: #151921; color: #d1d5db; border: 1px solid #242a35; padding: 9px 18px; border-radius: 25px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .tab-btn.active, .tab-btn:hover { background-color: #10b981; color: #0e1116; border-color: #10b981; font-weight: 700; }
+        .catalog { max-width: 1140px; margin: 0 auto; padding: 0 6% 80px 6%; display: flex; flex-wrap: wrap; gap: 25px; width: 100%; flex: 1; }
+.product-card { background-color: #151921; border: 1px solid #242a35; border-radius: 18px; overflow: hidden; flex: 1 1 calc(33.333% - 20px); min-width: 290px; display: flex; flex-direction: column; transition: 0.3s; }
+        .product-card:hover { transform: translateY(-4px); border-color: #10b981; }
+        .card-img-wrap { position: relative; }
+        .card-img-wrap img { width: 100%; height: 210px; object-fit: cover; display: block; }
+        .sale-badge { position: absolute; top: 12px; left: 12px; background-color: #10b981; color: #0e1116; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 8px; }
+        .like-icon { position: absolute; top: 12px; right: 12px; background: rgba(14, 17, 22, 0.85); border: 1px solid #2a303c; color: #ffffff; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+        .like-icon.liked { color: #ef4444; border-color: #ef4444; }
+        .card-content { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+        .cat-label { font-size: 12px; color: #34d399; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+        .card-content h3 { margin: 0 0 8px 0; font-size: 19px; }
+        .card-content p { margin: 0 0 20px 0; color: #9ca3af; font-size: 14px; flex: 1; }
+        .card-bottom { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #242a35; padding-top: 15px; }
+        .price-block { display: flex; flex-direction: column; }
+        .old-price { font-size: 13px; color: #6b7280; text-decoration: line-through; }
+        .site-price { font-size: 20px; font-weight: 800; color: #ffffff; }
+        .order-btn { background-color: #10b981; color: #0e1116; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-size: 14px; font-weight: 800; transition: 0.2s; }
+        .order-btn:hover { background-color: #059669; }
+
+        .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 200; }
+        .drawer { position: fixed; top: 0; right: -330px; width: 320px; height: 100%; background-color: #151921; border-left: 1px solid #242a35; padding: 25px; z-index: 201; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; }
+        .drawer.open { right: 0; }
+        .drawer-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #242a35; padding-bottom: 15px; }
+        .close-drawer { background: none; border: none; color: #9ca3af; font-size: 26px; cursor: pointer; }
+        .drawer-links { list-style: none; padding: 0; margin: 15px 0; }
+        .drawer-links li { border-bottom: 1px solid #242a35; }
+        .drawer-links a { display: block; padding: 12px 0; color: #e5e7eb; text-decoration: none; font-weight: 600; font-size: 15px; }
+        .drawer-links a:hover { color: #10b981; }
+        .drawer-info-box { background-color: #0e1116; border: 1px solid #242a35; border-radius: 12px; padding: 14px; margin-top: 15px; font-size: 13px; color: #9ca3af; }
+        .drawer-info-box strong { color: #ffffff; display: block; margin-bottom: 4px; }
+        .drawer-socials { display: flex; gap: 8px; margin-bottom: 14px; }
+        .drawer-socials a { flex: 1; text-align: center; background-color: #0e1116; border: 1px solid #2a303c; color: #ffffff; padding: 8px; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: 700; }
+        .drawer-socials a:hover { border-color: #10b981; color: #10b981; }
+        footer { background-color: #090b0e; border-top: 1px solid #1f242d; text-align: center; padding: 30px 15px; color: #6b7280; font-size: 13px; margin-top: auto; }
+        @media (max-width: 860px) { header { flex-direction: column; gap: 10px; } nav { display: flex; gap: 14px; } nav a { margin: 0; font-size: 14px; } .page-top { min-height: 40vh; padding: 60px 5% 50px 5%; } .page-top h1 { font-size: 28px; } .product-card { flex: 1 1 100%; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="brand"><div class="brand-dot"></div><span>KRONA МЕБЕЛЬ</span></a>
+        <nav>
+            <a href="index.html">Главная</a>
+            <a href="catalog.html" class="active">Каталог мебели</a>
+            <a href="delivery.html">Доставка и шоурум</a>
+        </nav>
+        <div class="header-right">
+            <a href="https://t.me" target="_blank" class="soc-btn" title="Telegram"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg></a>
+            <a href="https://wa.me" target="_blank" class="soc-btn" title="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.82 14.01c-.24.68-1.41 1.3-1.95 1.38-.5.08-1.13.11-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.01-2.42.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.83 2.02.9 2.17.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.14-.3.3-.13.59.17.29.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.33 1.44.29.15.46.12.63-.07.17-.19.73-.85.92-1.14.19-.29.39-.24.66-.14.27.1 1.7.8 1.99.95.29.14.49.22.56.34.07.12.07.69-.17 1.37z"/></svg></a>
+            <a href="https://vk.com" target="_blank" class="soc-btn" title="ВКонтакте"><svg viewBox="0 0 24 24"><path d="M13.16 18.92c-5.86 0-9.2-4.02-9.34-10.7h2.93c.1 4.9 2.26 6.98 3.97 7.41V8.22h2.76v4.23c1.69-.18 3.47-2.11 4.07-4.23h2.76c-.46 2.61-2.39 4.54-3.76 5.34 1.37.64 3.57 2.32 4.41 5.36h-3.04c-.65-2.03-2.28-3.6-4.43-3.82v3.82h-.33z"/></svg></a>
+            <button class="fav-btn" onclick="filterItems('fav')">♥ <span class="fav-count" id="favCount">0</span></button>
+            <button class="burger-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </header>
+
+    <div class="page-top">
+        <div class="page-top-inner">
+            <h1>Каталог дизайнерской мебели</h1>
+            <p>Используйте поиск или выберите категорию. Понравившиеся модели можно отложить в «Избранное ♥».</p>
+        </div>
+    </div>
+
+    <div class="controls" id="catalog">
+        <input type="text" class="search-box" id="searchInput" onkeyup="searchItems()" placeholder="Поиск по каталогу (например: диван, кресло, стол, торшер, кровать)...">
+        <div class="filter-tabs">
+            <button class="tab-btn active" onclick="filterItems('all', this)">Все товары (6)</button>
+            <button class="tab-btn" onclick="filterItems('soft', this)">Мягкая мебель</button>
+            <button class="tab-btn" onclick="filterItems('tables', this)">Столы и хранение</button>
+            <button class="tab-btn" onclick="filterItems('light', this)">Освещение</button>
+        </div>
+    </div>
+
+    <div class="catalog" id="catalogGrid">
+        <div class="product-card" data-category="soft" data-title="диван модульный nordic велюр гостиная">
+            <div class="card-img-wrap">
+                <span class="sale-badge">-15%</span>
+                <img src="sofa.jpg" alt="Диван Nordic">
+                <button class="like-icon" onclick="toggleLike(this)">♥</button>
+            </div>
+            <div class="card-content">
+                <div class="cat-label">Мягкая мебель</div>
+                <h3>Модульный диван «Nordic»</h3>
+                <p>Глубокая посадка, износостойкий итальянский велюр с защитой от влаги и каркас из массива бука.</p>
+<div class="card-bottom">
+                    <div class="price-block">
+                        <span class="old-price">89 000 ₽</span>
+                        <span class="site-price">75 600 ₽</span>
+                    </div>
+                    <a href="delivery.html" class="order-btn">Заказать</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="soft" data-title="кресло лаунж cloud букле">
+            <div class="card-img-wrap">
+                <img src="armchair.jpg" alt="Кресло Cloud">
+                <button class="like-icon" onclick="toggleLike(this)">♥</button>
+            </div>
+            <div class="card-content">
+                <div class="cat-label">Мягкая мебель</div>
+                <h3>Лаунж-кресло «Cloud»</h3>
+                <p>Эргономичная спинка и тактильная обивка из трендовой ткани букле молочного или графитового оттенка.</p>
+                <div class="card-bottom">
+                    <div class="price-block"><span class="site-price">34 900 ₽</span></div>
+                    <a href="delivery.html" class="order-btn">Заказать</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="tables" data-title="стол обеденный дуб loft массив">
+            <div class="card-img-wrap">
+                <span class="sale-badge">Хит</span>
+                <img src="table.jpg" alt="Обеденный стол">
+                <button class="like-icon" onclick="toggleLike(this)">♥</button>
+            </div>
+            <div class="card-content">
+                <div class="cat-label">Столы и хранение</div>
+                <h3>Обеденный стол «Arden»</h3>
+                <p>Столешница из цельного массива кавказского дуба под матовым маслом и стальное подстолье.</p>
+                <div class="card-bottom">
+                    <div class="price-block"><span class="site-price">48 500 ₽</span></div>
+                    <a href="delivery.html" class="order-btn">Заказать</a>
+                </div>
+            </div>
+        </div>
+<div class="product-card" data-category="light" data-title="торшер светильник лампа латунь">
+            <div class="card-img-wrap">
+                <img src="lamp.jpg" alt="Дизайнерский торшер">
+                <button class="like-icon" onclick="toggleLike(this)">♥</button>
+            </div>
+            <div class="card-content">
+                <div class="cat-label">Освещение</div>
+                <h3>Торшер «Halo Brass»</h3>
+                <p>Минималистичный напольный светильник из матовой латуни с тёплым рассеянным свечением 2700К.</p>
+                <div class="card-bottom">
+                    <div class="price-block">
+                        <span class="old-price">22 000 ₽</span>
+                        <span class="site-price">18 400 ₽</span>
+                    </div>
+                    <a href="delivery.html" class="order-btn">Заказать</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="tables" data-title="комод стеллаж шкаф хранение шпон">
+            <div class="card-img-wrap">
+                <img src="wardrobe.jpg" alt="Дизайнерский комод">
+                <button class="like-icon" onclick="toggleLike(this)">♥</button>
+            </div>
+            <div class="card-content">
+                <div class="cat-label">Столы и хранение</div>
+                <h3>Комод «Soho Walnut»</h3>
+                <p>Фрезерованные фасады в шпоне американского ореха, бесшумные доводчики и скрытые ручки.</p>
+                <div class="card-bottom">
+                    <div class="price-block"><span class="site-price">52 000 ₽</span></div>
+                    <a href="delivery.html" class="order-btn">Заказать</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="soft" data-title="кровать спальня двуспальная velvet">
+            <div class="card-img-wrap">
+                <span class="sale-badge">-10%</span>
+                <img src="bed.jpg" alt="Двуспальная кровать">
+                <button class="like-icon" onclick="toggleLike(this)">♥</button>
+            </div>
+            <div class="card-content">
+                <div class="cat-label">Мягкая мебель</div>
+                <h3>Кровать «Velvet Dream»</h3>
+                <p>Мягкое стеганое изголовье, ортопедическое основание и вместительный бельевой короб с газлифтом.</p>
+                <div class="card-bottom">
+                    <div class="price-block">
+                        <span class="old-price">69 000 ₽</span>
+                        <span class="site-price">62 100 ₽</span>
+                    </div>
+                    <a href="delivery.html" class="order-btn">Заказать</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 KRONA МЕБЕЛЬ — Салон дизайнерской мебели и света. Все права защищены.
+    </footer>
+
+    <div class="drawer-overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="drawer" id="drawer">
+        <div>
+            <div class="drawer-top">
+                <strong style="font-size: 17px;">Меню KRONA МЕБЕЛЬ</strong>
+                <button class="close-drawer" onclick="toggleMenu()">×</button>
+            </div>
+            <ul class="drawer-links">
+                <li><a href="index.html">Главная страница</a></li>
+                <li><a href="catalog.html">Весь каталог мебели (6)</a></li>
+                <li><a href="delivery.html">Доставка, сборка и оплата</a></li>
+                <li><a href="delivery.html">Бесплатный подбор тканей</a></li>
+                <li><a href="delivery.html">Мебель на заказ по размерам</a></li>
+            </ul>
+            <div class="drawer-info-box">
+                <strong>Шоурум в Прокопьевске</strong>
+                пр. Шахтёров, д. 10, ТЦ «Мебель Холл», 2 этаж<br>
+                Ежедневно: 10:00 – 20:00
+            </div>
+        </div>
+        <div style="margin-top: 20px;">
+<div style="font-size: 12px; color: #9ca3af; margin-bottom: 6px;">Написать в мессенджеры и соцсети:</div>
+            <div class="drawer-socials">
+                <a href="https://t.me" target="_blank">Telegram</a>
+                <a href="https://wa.me" target="_blank">WhatsApp</a>
+                <a href="https://vk.com" target="_blank">ВКонтакте</a>
+            </div>
+            <a href="tel:+78005557788" style="color: #ffffff; font-size: 18px; font-weight: 800; text-decoration: none; display: block; margin-bottom: 12px;">8 (800) 555-77-88</a>
+            <a href="delivery.html" style="display: block; background-color: #10b981; color: #0e1116; text-align: center; padding: 13px; border-radius: 10px; font-weight: 800; text-decoration: none; font-size: 14px;">Оставить заявку на расчёт</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const drawer = document.getElementById('drawer');
+            const overlay = document.getElementById('overlay');
+            drawer.classList.toggle('open');
+            overlay.style.display = drawer.classList.contains('open') ? 'block' : 'none';
+        }
+        function toggleLike(btn) {
+            btn.classList.toggle('liked');
+            document.getElementById('favCount').textContent = document.querySelectorAll('.like-icon.liked').length;
+        }
+        function filterItems(category, clickedBtn) {
+            if (clickedBtn) {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                clickedBtn.classList.add('active');
+            }
+            document.querySelectorAll('.product-card').forEach(card => {
+                if (category === 'all') card.style.display = 'flex';
+                else if (category === 'fav') card.style.display = card.querySelector('.like-icon').classList.contains('liked') ? 'flex' : 'none';
+                else card.style.display = card.dataset.category === category ? 'flex' : 'none';
+            });
+        }
+        function searchItems() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.style.display = card.dataset.title.toLowerCase().includes(query) ? 'flex' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
