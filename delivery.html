@@ -111,10 +111,11 @@
             <h2>Оставить заявку на расчёт или заказ</h2>
             <p>Оставьте контакты — дизайнер-консультант свяжется с вами в течение 15 минут и отправит образцы тканей.</p>
             <form onsubmit="sendForm(event)">
-                <input type="text" class="input-field" placeholder="Ваше имя" required>
-<input type="tel" class="input-field" placeholder="Номер телефона (+7 ...)" required>
-                <input type="text" class="input-field" placeholder="Какая модель заинтересовала? (необязательно)">
-                <button type="submit" class="submit-btn">Отправить заявку</button>
+                <input type="text" id="clientName" class="input-field" placeholder="Ваше имя" required>
+<input type="tel" id="clientPhone" class="input-field" placeholder="Номер телефона (+7 ...)" required>
+                <input type="text" id="clientItem" class="input-field" placeholder="Какая модель заинтересовала?">
+                <button type="submit" class="submit-btn" style="margin-bottom: 10px;">Отправить заявку на сайте</button>
+                <button type="button" onclick="sendToTelegram()" class="submit-btn" style="background-color: #181c24; color: #34d399; border: 1px solid #10b981;">Отправить заказ сразу в Telegram ↗</button>
             </form>
             <div class="success-msg" id="successMsg">✓ Спасибо! Ваша заявка принята, менеджер скоро перезвонит.</div>
         </div>
@@ -162,9 +163,26 @@
             drawer.classList.toggle('open');
             overlay.style.display = drawer.classList.contains('open') ? 'block' : 'none';
         }
+
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const selectedItem = params.get('item');
+            if (selectedItem) {
+                document.getElementById('clientItem').value = selectedItem;
+            }
+        };
+
         function sendForm(e) {
             e.preventDefault();
             document.getElementById('successMsg').style.display = 'block';
+        }
+
+        function sendToTelegram() {
+            const name = document.getElementById('clientName').value || 'Клиент';
+            const phone = document.getElementById('clientPhone').value || 'не указан';
+            const item = document.getElementById('clientItem').value || 'Консультация по мебели';
+            const text = encodeURIComponent(`Здравствуйте! Заявка с сайта KRONA МЕБЕЛЬ:\nИмя: ${name}\nТелефон: ${phone}\nТовар: ${item}`);
+            window.open(`https://t.meshare/url?url=KRONA&text=${text}`, '_blank');
         }
     </script>
 </body>
